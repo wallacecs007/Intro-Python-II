@@ -1,4 +1,7 @@
 from room import Room
+from player import Player
+
+import os
 
 # Declare all the rooms
 
@@ -49,3 +52,35 @@ room['treasure'].s_to = room['narrow']
 # Print an error message if the movement isn't allowed.
 #
 # If the user enters "q", quit the game.
+
+print(f"==================Controls==================")
+print(f"n = Move North\ne = Move East\ns = Move South\nw = Move West\nq = Quit Game")
+print(f"====================Game====================")
+print(f"The goal of the game is simple.\nMake it to the treasure room and win!")
+print(f"============================================")
+
+input("Press Enter to continue...")
+os.system("cls")
+
+player = Player(room['outside'])
+
+print(f"{player.current_room}")
+print("\n")
+
+
+gameLoop = True
+
+while gameLoop:
+
+    currentRoom = room['outside']
+
+    userInput = input("Please input a command: ")
+    print("\n")
+
+    if(userInput == "q"):
+        print("Thanks for playing!")
+        gameLoop = False
+    elif userInput not in "nesw":
+        print("That's not a valid command!")
+    else:
+        player.move(userInput)
