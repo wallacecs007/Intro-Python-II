@@ -1,4 +1,8 @@
+import os
 from room import Room
+from player import Player
+from item import Item
+
 
 # Declare all the rooms
 
@@ -33,6 +37,15 @@ room['narrow'].w_to = room['foyer']
 room['narrow'].n_to = room['treasure']
 room['treasure'].s_to = room['narrow']
 
+items = {
+    "stick":  Item("Stick", "It's pretty sticky..."),
+    "rock": Item("Rock", "What can I say, it's a rock."),
+    "sword": Item("Sword", "It's kind of pointy.")
+}
+
+room['outside'].items.append(items['stick'])
+room['outside'].items.append(items['rock'])
+
 #
 # Main
 #
@@ -49,3 +62,44 @@ room['treasure'].s_to = room['narrow']
 # Print an error message if the movement isn't allowed.
 #
 # If the user enters "q", quit the game.
+
+print(f"==================Controls==================")
+print(f"n = Move North\ne = Move East\ns = Move South\nw = Move West\nq = Quit Game")
+print(f"====================Game====================")
+print(f"The goal of the game is simple.\nMake it to the treasure room and win!")
+print(f"============================================")
+
+input("Press Enter to continue...")
+os.system("cls")
+
+player = Player(room['outside'])
+
+player.items.append(items['sword'])
+
+print(f"{player.current_room}")
+print("\n")
+
+
+gameLoop = True
+
+while gameLoop:
+
+    currentRoom = room['outside']
+
+    userInput = input("Please input a command: ")
+
+    print("\n")
+    if(len(userInput.split(" ")) == 2):
+        userInput = userInput.split(" ")
+        print(userInput)
+        if userInput[0].lower() == "take":
+            player.get_item(userInput[1])
+        elif userInput[0].lower() == "drop":
+            player.drop_item(userInput[1])
+    elif(userInput == "q"):
+        print("Thanks for playing!")
+        gameLoop = False
+    elif userInput in ["n", "e", "s", "w"]:
+        player.move(userInput)
+    else:
+        print("That's not a valid command!")
