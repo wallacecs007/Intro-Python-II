@@ -1,7 +1,8 @@
+import os
 from room import Room
 from player import Player
+from item import Item
 
-import os
 
 # Declare all the rooms
 
@@ -36,6 +37,15 @@ room['narrow'].w_to = room['foyer']
 room['narrow'].n_to = room['treasure']
 room['treasure'].s_to = room['narrow']
 
+items = {
+    "stick":  Item("Stick", "It's pretty sticky..."),
+    "rock": Item("Rock", "What can I say, it's a rock."),
+    "sword": Item("Sword", "It's kind of pointy.")
+}
+
+room['outside'].items.append(items['stick'])
+room['outside'].items.append(items['rock'])
+
 #
 # Main
 #
@@ -64,6 +74,8 @@ os.system("cls")
 
 player = Player(room['outside'])
 
+player.items.append(items['sword'])
+
 print(f"{player.current_room}")
 print("\n")
 
@@ -75,12 +87,19 @@ while gameLoop:
     currentRoom = room['outside']
 
     userInput = input("Please input a command: ")
-    print("\n")
 
-    if(userInput == "q"):
+    print("\n")
+    if(len(userInput.split(" ")) == 2):
+        userInput = userInput.split(" ")
+        print(userInput)
+        if userInput[0].lower() == "take":
+            player.get_item(userInput[1])
+        elif userInput[0].lower() == "drop":
+            player.drop_item(userInput[1])
+    elif(userInput == "q"):
         print("Thanks for playing!")
         gameLoop = False
-    elif userInput not in "nesw":
-        print("That's not a valid command!")
-    else:
+    elif userInput in ["n", "e", "s", "w"]:
         player.move(userInput)
+    else:
+        print("That's not a valid command!")
